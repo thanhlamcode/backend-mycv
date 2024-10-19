@@ -32,12 +32,13 @@ module.exports.register = async (req, res) => {
     // Tạo JWT
     const token = jwt.sign(
       { userId: newUser._id, userName: newUser.userName },
-      JWT_SECRET,
+      String(JWT_SECRET), // Ép kiểu JWT_SECRET thành chuỗi,
       { expiresIn: "1h" } // Token hết hạn sau 1 giờ
     );
 
     // Trả về token và thông tin người dùng
     return res.status(201).json({
+      code: 200,
       message: "Đăng ký thành công",
       token,
       user: {
