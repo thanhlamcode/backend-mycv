@@ -32,6 +32,6 @@ const infoSchema = new mongoose.Schema({
   },
 });
 
-const information = mongoose.model("information", infoSchema, "information");
+const Information = mongoose.model("information", infoSchema, "information");
 
-module.exports = information;
+module.exports = Information;
