@@ -32,7 +32,7 @@ module.exports.register = async (req, res) => {
     // Tạo JWT
     const token = jwt.sign(
       { userId: newUser._id, userName: newUser.userName },
-      String(JWT_SECRET), // Ép kiểu JWT_SECRET thành chuỗi,
+      String(JWT_SECRET), // Ép kiểu JWT_SECRET thành chuỗi
       { expiresIn: "1h" } // Token hết hạn sau 1 giờ
     );
 
@@ -58,14 +58,50 @@ module.exports.register = async (req, res) => {
 // [POST] /auth/login
 module.exports.login = async (req, res) => {
   try {
-    console.log(req.body);
+    const { userName, password } = req.body;
 
-    return res.json("ok");
+    // Tìm người dùng trong cơ sở dữ liệu
+    const existingUser = await Account.findOne({ userName });
+    if (!existingUser) {
+      return res.status(400).json({
+        code: 400,
+        message: "Tên người dùng không tồn tại",
+      });
+    }
+
+    // So sánh mật khẩu
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        code: 400,
+        message: "Mật khẩu không đúng",
+      });
+    }
+
+    // Tạo JWT
+    const token = jwt.sign(
+      { userId: existingUser._id, userName: existingUser.userName },
+      String(JWT_SECRET), // Ép kiểu JWT_SECRET thành chuỗi
+      { expiresIn: "1h" } // Token hết hạn sau 1 giờ
+    );
+
+    return res.status(200).json({
+      code: 200,
+      message: "Đăng nhập thành công",
+      token,
+      user: {
+        id: existingUser._id,
+        userName: existingUser.userName,
+      },
+    });
   } catch (error) {
     console.log(error);
-    return res.json({
-      code: 400,
-      messgae: "Đã có lỗi xảy ra",
+    return res.status(500).json({
+      code: 500,
+      message: "Đã có lỗi xảy ra",
     });
   }
 };
