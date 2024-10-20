@@ -4,6 +4,7 @@ const Account = require("../../models/account.model");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+// [POST] /auth/register
 module.exports.register = async (req, res) => {
   try {
     const { userName, password } = req.body;
