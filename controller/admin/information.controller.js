@@ -27,10 +27,6 @@ module.exports.edit = async (req, res) => {
       req.body.avatar = req.uploadedFileUrl; // Gán URL ảnh đã upload vào body
     }
 
-    console.log(req.uploadedFileUrl);
-
-    console.log(req.body);
-
     // Cập nhật thông tin trong database
     const record = await Information.findOneAndUpdate({ _id: id }, req.body, {
       new: true,

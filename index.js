@@ -7,26 +7,23 @@ const fileUpload = require("express-fileupload");
 const routesAdmin = require("./routes/admin/index.route");
 const cors = require("cors");
 
+// Kết nối cơ sở dữ liệu
 database.connect();
 
+// Khởi tạo ứng dụng Express
 const app = express();
 const port = process.env.PORT;
 
-// parse application/json
-app.use(bodyParser.json());
+// Cấu hình middleware
+app.use(bodyParser.json()); // Middleware xử lý application/json
+app.use(fileUpload()); // Middleware xử lý upload file
+app.use(cookieParser()); // Middleware xử lý cookie
+app.use(cors()); // Middleware xử lý CORS
 
-// Đăng ký middleware xử lý upload file
-app.use(fileUpload());
-
-//cookie-parser
-app.use(cookieParser());
-
-//cors
-app.use(cors());
-
-//routes
+// Đăng ký các route cho admin
 routesAdmin(app);
 
+// Khởi động server
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
