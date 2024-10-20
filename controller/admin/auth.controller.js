@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const Account = require("../../models/account.model"); // Giả sử bạn đã có model Account
+const Account = require("../../models/account.model");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
