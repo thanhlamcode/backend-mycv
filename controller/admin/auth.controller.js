@@ -1,20 +1,21 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Account = require("../../models/account.model");
+const Information = require("../../models/information.model");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // [POST] /auth/register
 module.exports.register = async (req, res) => {
   try {
-    const { userName, password } = req.body;
+    const { emailAddress, password } = req.body;
 
-    // Kiểm tra nếu userName đã tồn tại
-    const existingUser = await Account.findOne({ userName });
+    // Kiểm tra nếu emailAddress đã tồn tại
+    const existingUser = await Account.findOne({ emailAddress: emailAddress });
     if (existingUser) {
       return res.status(400).json({
         code: 400,
-        message: "Tên người dùng đã tồn tại",
+        message: "Địa chỉ email đã tồn tại",
       });
     }
 
@@ -23,9 +24,16 @@ module.exports.register = async (req, res) => {
 
     // Tạo người dùng mới
     const newUser = new Account({
-      userName,
+      emailAddress: emailAddress,
       password: hashedPassword,
     });
+
+    const information = new Information({
+      emailAddress: emailAddress,
+    });
+
+    // Lưu 1 thông tin
+    await information.save();
 
     // Lưu người dùng vào cơ sở dữ liệu
     await newUser.save();
@@ -44,7 +52,7 @@ module.exports.register = async (req, res) => {
       token,
       user: {
         id: newUser._id,
-        userName: newUser.userName,
+        userName: newUser.emailAddress,
       },
     });
   } catch (error) {
@@ -59,14 +67,14 @@ module.exports.register = async (req, res) => {
 // [POST] /auth/login
 module.exports.login = async (req, res) => {
   try {
-    const { userName, password } = req.body;
+    const { emailAddress, password } = req.body;
 
     // Tìm người dùng trong cơ sở dữ liệu
-    const existingUser = await Account.findOne({ userName });
+    const existingUser = await Account.findOne({ emailAddress: emailAddress });
     if (!existingUser) {
       return res.status(400).json({
         code: 400,
-        message: "Tên người dùng không tồn tại",
+        message: "Email không tồn tại",
       });
     }
 
@@ -84,7 +92,7 @@ module.exports.login = async (req, res) => {
 
     // Tạo JWT
     const token = jwt.sign(
-      { userId: existingUser._id, userName: existingUser.userName },
+      { userId: existingUser._id, emailAddress: existingUser.emailAddress },
       String(JWT_SECRET), // Ép kiểu JWT_SECRET thành chuỗi
       { expiresIn: "1h" } // Token hết hạn sau 1 giờ
     );
@@ -95,7 +103,7 @@ module.exports.login = async (req, res) => {
       token,
       user: {
         id: existingUser._id,
-        userName: existingUser.userName,
+        userName: existingUser.emailAddress,
       },
     });
   } catch (error) {

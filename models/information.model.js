@@ -3,11 +3,9 @@ const mongoose = require("mongoose");
 const infoSchema = new mongoose.Schema({
   fullName: {
     type: String,
-    required: true,
   },
   phoneNumber: {
     type: String,
-    required: true,
   },
   facebookAddress: {
     type: String,

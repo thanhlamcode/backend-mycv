@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 // Tạo schema cho model Account
 const accountSchema = new mongoose.Schema({
-  userName: {
+  emailAddress: {
     type: String,
-    required: true, // userName là bắt buộc
-    unique: true, // userName phải là duy nhất
+    required: true,
+    unique: true,
   },
   password: {
     type: String,
