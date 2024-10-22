@@ -1,31 +1,31 @@
-const Information = require("../../models/information.model");
+const Project = require("../../models/project.model");
 
-// [GET] /admin/information/:id
+// [GET] /admin/project/:id
 module.exports.index = async (req, res) => {
   try {
     const id = req.params.id;
 
-    const info = await Information.findOne({ _id: id }).select("-password");
+    const project = await Project.findOne({ _id: id });
 
-    return res.json(info);
+    return res.json(project);
   } catch (error) {
     console.log(error);
     return res.json(false);
   }
 };
 
-// [PATCH] /admin/information/edit/:id
+// [PATCH] /admin/project/edit/:id
 module.exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
 
     // Nếu có ảnh được upload, cập nhật URL avatar
     if (req.uploadedFileUrl) {
-      req.body.avatar = req.uploadedFileUrl; // Gán URL ảnh đã upload vào body
+      req.body.avatar = req.uploadedFileUrl;
     }
 
     // Cập nhật thông tin trong database
-    const record = await Information.findOneAndUpdate({ _id: id }, req.body, {
+    const record = await Project.findOneAndUpdate({ _id: id }, req.body, {
       new: true,
     });
 
