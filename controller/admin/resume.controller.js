@@ -85,7 +85,7 @@ module.exports.editEducation = async (req, res) => {
   try {
     const { resumeId, educationId } = req.params;
 
-    const updatedRecord = await Resume.updateOne(
+    await Resume.updateOne(
       { _id: resumeId, "education._id": educationId },
       {
         $set: {
@@ -94,7 +94,49 @@ module.exports.editEducation = async (req, res) => {
       }
     );
 
-    return res.json(updatedRecord);
+    return res.json(true);
+  } catch (error) {
+    console.log(error);
+    return res.json(false);
+  }
+};
+
+// [PATCH] /admin/resume/edit/achievement/:resumeId/:achievementId
+module.exports.editAchievement = async (req, res) => {
+  try {
+    const { achievementId, resumeId } = req.params;
+
+    await Resume.updateOne(
+      { _id: resumeId, "achievement._id": achievementId },
+      {
+        $set: {
+          "achievement.$": req.body, // Cập nhật toàn bộ phần tử education tương ứng
+        },
+      }
+    );
+
+    return res.json(true);
+  } catch (error) {
+    console.log(error);
+    return res.json(false);
+  }
+};
+
+// [PATCH] /admin/resume/edit/certificate/:resumeId/:certificateId
+module.exports.editCertificate = async (req, res) => {
+  try {
+    const { certificateId, resumeId } = req.params;
+
+    await Resume.updateOne(
+      { _id: resumeId, "certificate._id": certificateId },
+      {
+        $set: {
+          "certificate.$": req.body, // Cập nhật toàn bộ phần tử education tương ứng
+        },
+      }
+    );
+
+    return res.json(true);
   } catch (error) {
     console.log(error);
     return res.json(false);

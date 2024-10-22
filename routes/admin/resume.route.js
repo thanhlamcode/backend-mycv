@@ -10,5 +10,13 @@ router.patch(
   "/edit/education/:resumeId/:educationId",
   controller.editEducation
 );
+router.patch(
+  "/edit/achievement/:resumeId/:achievementId",
+  controller.editAchievement
+);
+router.patch(
+  "/edit/certificate/:resumeId/:certificateId",
+  controller.editCertificate
+);
 
 module.exports = router;
