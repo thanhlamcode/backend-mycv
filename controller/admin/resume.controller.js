@@ -14,7 +14,7 @@ module.exports.index = async (req, res) => {
   }
 };
 
-// [POST] /admin/resume/education
+// [POST] /admin/resume/education/:id
 module.exports.education = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -36,7 +36,7 @@ module.exports.education = async (req, res) => {
   }
 };
 
-// [POST] /admin/resume/achievement
+// [POST] /admin/resume/achievement/:id
 module.exports.achievement = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -52,6 +52,28 @@ module.exports.achievement = async (req, res) => {
     );
 
     return res.json(record.achievement[0]); // Trả về bản ghi mới nhất
+  } catch (error) {
+    console.log(error);
+    return res.json(false);
+  }
+};
+
+// [POST] /admin/resume/certificate/:id
+module.exports.certificate = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const record = await Resume.findOneAndUpdate(
+      { _id: userId },
+      {
+        $push: {
+          certificate: req.body,
+        },
+      },
+      { new: true, fields: { certificate: { $slice: -1 } } } // Trả về chỉ phần tử cuối cùng trong education
+    );
+
+    return res.json(record.certificate[0]); // Trả về bản ghi mới nhất
   } catch (error) {
     console.log(error);
     return res.json(false);

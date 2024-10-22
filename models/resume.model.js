@@ -11,7 +11,6 @@ const resumeSchema = new mongoose.Schema({
   ],
   achievement: [
     {
-      title: String,
       university: String,
       achievement: String,
       description: String,
@@ -19,8 +18,6 @@ const resumeSchema = new mongoose.Schema({
   ],
   certificate: [
     {
-      title: String,
-      university: String,
       certificate: String,
       description: String,
     },
