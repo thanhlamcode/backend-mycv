@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const routesAdmin = require("./routes/admin/index.route");
+const routesClient = require("./routes/clients/index.route");
 const cors = require("cors");
 
 // Kết nối cơ sở dữ liệu
@@ -22,6 +23,7 @@ app.use(cors()); // Middleware xử lý CORS
 
 // Đăng ký các route cho admin
 routesAdmin(app);
+routesClient(app);
 
 // Khởi động server
 app.listen(port, () => {
