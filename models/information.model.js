@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const infoSchema = new mongoose.Schema({
+  userId: String,
   fullName: {
     type: String,
   },
@@ -19,6 +20,7 @@ const infoSchema = new mongoose.Schema({
   emailAddress: {
     type: String,
     match: [/.+\@.+\..+/, "Please enter a valid email address"],
+    unique: true,
   },
   description: {
     type: String,
