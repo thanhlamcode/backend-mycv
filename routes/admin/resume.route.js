@@ -18,5 +18,9 @@ router.patch(
   "/edit/certificate/:resumeId/:certificateId",
   controller.editCertificate
 );
+router.delete(
+  "/delete/certificate/:resumeId/:certificateId",
+  controller.deleteCertificate
+);
 
 module.exports = router;

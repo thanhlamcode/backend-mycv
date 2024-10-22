@@ -110,7 +110,7 @@ module.exports.editAchievement = async (req, res) => {
       { _id: resumeId, "achievement._id": achievementId },
       {
         $set: {
-          "achievement.$": req.body, // Cập nhật toàn bộ phần tử education tương ứng
+          "achievement.$": req.body,
         },
       }
     );
@@ -132,6 +132,27 @@ module.exports.editCertificate = async (req, res) => {
       {
         $set: {
           "certificate.$": req.body, // Cập nhật toàn bộ phần tử education tương ứng
+        },
+      }
+    );
+
+    return res.json(true);
+  } catch (error) {
+    console.log(error);
+    return res.json(false);
+  }
+};
+
+// [DELETE] /admin/resume/delete/certificate/:resumeId/:certificateId
+module.exports.deleteCertificate = async (req, res) => {
+  try {
+    const { certificateId, resumeId } = req.params;
+
+    await Resume.updateOne(
+      { _id: resumeId },
+      {
+        $pull: {
+          certificate: { _id: certificateId },
         },
       }
     );
