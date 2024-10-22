@@ -79,3 +79,24 @@ module.exports.certificate = async (req, res) => {
     return res.json(false);
   }
 };
+
+// [PATCH] /admin/resume/edit/education/:resumeId/:educationId
+module.exports.editEducation = async (req, res) => {
+  try {
+    const { resumeId, educationId } = req.params;
+
+    const updatedRecord = await Resume.updateOne(
+      { _id: resumeId, "education._id": educationId },
+      {
+        $set: {
+          "education.$": req.body, // Cập nhật toàn bộ phần tử education tương ứng
+        },
+      }
+    );
+
+    return res.json(updatedRecord);
+  } catch (error) {
+    console.log(error);
+    return res.json(false);
+  }
+};
