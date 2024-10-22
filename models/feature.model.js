@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const featureSchema = new mongoose.Schema({
-  userId: String,
   skills: [
     {
       skillName: String,

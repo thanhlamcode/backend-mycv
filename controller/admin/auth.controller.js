@@ -2,6 +2,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Account = require("../../models/account.model");
 const Information = require("../../models/information.model");
+const Contact = require("../../models/contact.model");
+const Feature = require("../../models/feature.model");
+const Project = require("../../models/project.model");
+const Resume = require("../../models/resume.model");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -22,25 +26,37 @@ module.exports.register = async (req, res) => {
     // Mã hóa mật khẩu
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Tạo người dùng mới
+    // Tạo các đối tượng cho các model liên quan
+    const contact = new Contact({});
+    const feature = new Feature({}); // Khởi tạo với dữ liệu mặc định hoặc từ req.body
+    const information = new Information({});
+    const project = new Project({});
+    const resume = new Resume({});
+
+    // Lưu từng model vào database
+    await contact.save();
+    await feature.save();
+    await information.save();
+    await project.save();
+    await resume.save();
+
+    // Tạo người dùng mới và gán các ObjectId từ các model liên quan
     const newUser = new Account({
       emailAddress: emailAddress,
       password: hashedPassword,
+      contact: contact._id, // Gán ObjectId của contact
+      feature: feature._id, // Gán ObjectId của feature
+      information: information._id, // Gán ObjectId của information
+      project: project._id, // Gán ObjectId của project
+      resume: resume._id, // Gán ObjectId của resume
     });
-
-    const information = new Information({
-      emailAddress: emailAddress,
-    });
-
-    // Lưu 1 thông tin
-    await information.save();
 
     // Lưu người dùng vào cơ sở dữ liệu
     await newUser.save();
 
     // Tạo JWT
     const token = jwt.sign(
-      { userId: newUser._id, userName: newUser.userName },
+      { userId: newUser._id, emailAddress: newUser.emailAddress },
       String(JWT_SECRET), // Ép kiểu JWT_SECRET thành chuỗi
       { expiresIn: "1h" } // Token hết hạn sau 1 giờ
     );
@@ -52,7 +68,7 @@ module.exports.register = async (req, res) => {
       token,
       user: {
         id: newUser._id,
-        userName: newUser.emailAddress,
+        emailAddress: newUser.emailAddress,
       },
     });
   } catch (error) {

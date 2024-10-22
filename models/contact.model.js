@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const contactSchema = new mongoose.Schema({
-  userId: String,
   contacts: [
     {
       senderName: String,

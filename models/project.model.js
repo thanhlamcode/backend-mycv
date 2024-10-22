@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const projectSchema = new mongoose.Schema({
-  userId: {
-    type: String,
-    required: true, // Đảm bảo userId là bắt buộc
-  },
   projects: [
     {
       projectName: {
