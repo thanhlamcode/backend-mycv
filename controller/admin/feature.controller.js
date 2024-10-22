@@ -5,7 +5,7 @@ module.exports.index = async (req, res) => {
   try {
     const id = req.params.id;
 
-    const info = await Information.findOne({ _id: id }).select("-password");
+    const info = await Feature.findOne({ _id: id });
 
     return res.json(info);
   } catch (error) {
@@ -21,8 +21,6 @@ module.exports.index = async (req, res) => {
 module.exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
-
-    console.log(req.body);
 
     // Cập nhật thông tin trong database
     const record = await Feature.findOneAndUpdate({ _id: id }, req.body, {
