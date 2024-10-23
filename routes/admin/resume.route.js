@@ -22,5 +22,13 @@ router.delete(
   "/delete/certificate/:resumeId/:certificateId",
   controller.deleteCertificate
 );
+router.delete(
+  "/delete/education/:resumeId/:educationId",
+  controller.deleteEducation
+);
+router.delete(
+  "/delete/achievement/:resumeId/:achievementId",
+  controller.deleteAchievement
+);
 
 module.exports = router;

@@ -163,3 +163,45 @@ module.exports.deleteCertificate = async (req, res) => {
     return res.json(false);
   }
 };
+
+// [DELETE] /admin/resume/delete/education/:resumeId/:educationId
+module.exports.deleteEducation = async (req, res) => {
+  try {
+    const { educationId, resumeId } = req.params;
+
+    await Resume.updateOne(
+      { _id: resumeId },
+      {
+        $pull: {
+          education: { _id: educationId },
+        },
+      }
+    );
+
+    return res.json(true);
+  } catch (error) {
+    console.log(error);
+    return res.json(false);
+  }
+};
+
+// [DELETE] /admin/resume/delete/achievement/:resumeId/:achievementId
+module.exports.deleteAchievement = async (req, res) => {
+  try {
+    const { achievementId, resumeId } = req.params;
+
+    await Resume.updateOne(
+      { _id: resumeId },
+      {
+        $pull: {
+          achievement: { _id: achievementId },
+        },
+      }
+    );
+
+    return res.json(true);
+  } catch (error) {
+    console.log(error);
+    return res.json(false);
+  }
+};
