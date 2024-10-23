@@ -106,21 +106,22 @@ module.exports.login = async (req, res) => {
       });
     }
 
+    // Chuyển đổi existingUser thành plain object và xóa trường password
+    const userWithoutPassword = existingUser.toObject();
+    delete userWithoutPassword.password;
+
     // Tạo JWT
     const token = jwt.sign(
       { userId: existingUser._id, emailAddress: existingUser.emailAddress },
-      String(JWT_SECRET), // Ép kiểu JWT_SECRET thành chuỗi
-      { expiresIn: "1h" } // Token hết hạn sau 1 giờ
+      String(JWT_SECRET),
+      { expiresIn: "1h" }
     );
 
     return res.status(200).json({
       code: 200,
       message: "Đăng nhập thành công",
       token,
-      user: {
-        id: existingUser._id,
-        userName: existingUser.emailAddress,
-      },
+      user: userWithoutPassword,
     });
   } catch (error) {
     console.log(error);
