@@ -28,8 +28,10 @@ module.exports.register = async (req, res) => {
 
     // Tạo các đối tượng cho các model liên quan
     const contact = new Contact({});
-    const feature = new Feature({}); // Khởi tạo với dữ liệu mặc định hoặc từ req.body
-    const information = new Information({});
+    const feature = new Feature({});
+    const information = new Information({
+      emailAddress: emailAddress, // Đảm bảo emailAddress được lưu
+    });
     const project = new Project({});
     const resume = new Resume({});
 
@@ -61,15 +63,14 @@ module.exports.register = async (req, res) => {
       { expiresIn: "1h" } // Token hết hạn sau 1 giờ
     );
 
+    delete newUser.password; // Xóa trường password khỏi đối tượng
+
     // Trả về token và thông tin người dùng
     return res.status(201).json({
       code: 200,
       message: "Đăng ký thành công",
       token,
-      user: {
-        id: newUser._id,
-        emailAddress: newUser.emailAddress,
-      },
+      user: newUser,
     });
   } catch (error) {
     console.log(error);
