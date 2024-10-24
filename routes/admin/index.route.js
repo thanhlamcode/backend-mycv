@@ -3,6 +3,7 @@ const informationRouter = require("./information.route");
 const featureRouter = require("./feature.route");
 const projectRouter = require("./project.route");
 const resumeRouter = require("./resume.route");
+const accountRouter = require("./account.route");
 const authRouter = require("./auth.route");
 
 module.exports = (app) => {
@@ -12,4 +13,5 @@ module.exports = (app) => {
   app.use(PATCH_ADMIN + "/feature", featureRouter);
   app.use(PATCH_ADMIN + "/project", projectRouter);
   app.use(PATCH_ADMIN + "/resume", resumeRouter);
+  app.use(PATCH_ADMIN + "/account", accountRouter);
 };
