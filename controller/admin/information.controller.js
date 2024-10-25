@@ -19,9 +19,12 @@ module.exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
 
-    // Nếu có ảnh được upload, cập nhật URL avatar
+    // If an image is uploaded, update the avatar URL in the request body
     if (req.uploadedFileUrl) {
-      req.body.avatar = req.uploadedFileUrl; // Gán URL ảnh đã upload vào body
+      req.body.avatar = req.uploadedFileUrl;
+    } else {
+      // Remove avatar from req.body if no file is uploaded
+      delete req.body.avatar;
     }
 
     // Cập nhật thông tin trong database
