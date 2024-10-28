@@ -1,4 +1,5 @@
 const Project = require("../../models/project.model");
+const streamUpload = require("../../helpers/uploadCloudDinary");
 
 // [GET] /admin/project/:id
 module.exports.index = async (req, res) => {
@@ -33,5 +34,24 @@ module.exports.edit = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(400).json(false);
+  }
+};
+
+// [PATCH] /admin/project/upload
+module.exports.upload = async (req, res) => {
+  try {
+    console.log("Upload request received.");
+    if (req.files && req.files.file) {
+      const fileBuffer = req.files.file.data;
+      const secureUrl = await streamUpload(fileBuffer); // Upload file to Cloudinary
+      console.log("File uploaded successfully: ", secureUrl);
+      return res.status(200).json({ secure_url: secureUrl });
+    } else {
+      console.log("No file found in request.");
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    return res.status(500).json({ error: "Error uploading file" });
   }
 };
