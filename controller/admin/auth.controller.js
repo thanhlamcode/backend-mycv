@@ -60,7 +60,7 @@ module.exports.register = async (req, res) => {
     const token = jwt.sign(
       { userId: newUser._id, emailAddress: newUser.emailAddress },
       String(JWT_SECRET), // Ép kiểu JWT_SECRET thành chuỗi
-      { expiresIn: "1h" } // Token hết hạn sau 1 giờ
+      { expiresIn: "24h" } // Token hết hạn sau 1 giờ
     );
 
     delete newUser.password; // Xóa trường password khỏi đối tượng
@@ -115,7 +115,7 @@ module.exports.login = async (req, res) => {
     const token = jwt.sign(
       { userId: existingUser._id, emailAddress: existingUser.emailAddress },
       String(JWT_SECRET),
-      { expiresIn: "1h" }
+      { expiresIn: "24h" } // Token hết hạn sau 1 giờ
     );
 
     return res.status(200).json({
