@@ -26,6 +26,7 @@ const infoSchema = new mongoose.Schema({
   },
   slug: {
     type: String,
+    unique: true,
   },
   expertise: String,
   avatar: String,

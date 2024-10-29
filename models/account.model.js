@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 
-// Tạo schema cho model Account
 const accountSchema = new mongoose.Schema({
   emailAddress: {
     type: String,
@@ -9,31 +9,43 @@ const accountSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true, // password là bắt buộc
+    required: true,
+  },
+  slug: {
+    type: String,
+    unique: true,
   },
   contact: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Contact", // Tham chiếu đến model Contact
+    ref: "Contact",
   },
   feature: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Feature", // Tham chiếu đến model Feature
+    ref: "Feature",
   },
   information: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Information", // Tham chiếu đến model Information
+    ref: "Information",
   },
   project: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Project", // Tham chiếu đến model Project
+    ref: "Project",
   },
   resume: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Resume", // Tham chiếu đến model Resume
+    ref: "Resume",
   },
 });
 
-// Tạo model từ schema
+// Middleware tự động tạo slug trước khi lưu tài liệu
+accountSchema.pre("save", function (next) {
+  if (!this.slug) {
+    // Tạo slug từ emailAddress hoặc một trường khác nếu bạn muốn
+    this.slug = slugify(this.emailAddress.split("@")[0], { lower: true });
+  }
+  next();
+});
+
 const Account = mongoose.model("Account", accountSchema, "account");
 
 module.exports = Account;

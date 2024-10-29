@@ -1,3 +1,4 @@
+const Account = require("../../models/account.model");
 const Information = require("../../models/information.model");
 
 // [GET] /admin/information/:id
@@ -19,18 +20,32 @@ module.exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
 
-    // If an image is uploaded, update the avatar URL in the request body
+    // Nếu có ảnh được tải lên, cập nhật URL avatar trong `req.body`
     if (req.uploadedFileUrl) {
       req.body.avatar = req.uploadedFileUrl;
     } else {
-      // Remove avatar from req.body if no file is uploaded
+      // Xóa avatar khỏi `req.body` nếu không có ảnh nào được tải lên
       delete req.body.avatar;
+    }
+
+    // Tìm thông tin cũ
+    const oldInformation = await Information.findOne({ _id: id });
+    if (!oldInformation) {
+      return res.status(404).json({ message: "Information not found" });
     }
 
     // Cập nhật thông tin trong database
     const record = await Information.findOneAndUpdate({ _id: id }, req.body, {
       new: true,
     });
+
+    // Nếu có slug mới trong `req.body`, cập nhật slug trong Account
+    if (req.body.slug) {
+      await Account.updateOne(
+        { slug: oldInformation.slug },
+        { slug: req.body.slug }
+      );
+    }
 
     return res.json(record);
   } catch (error) {

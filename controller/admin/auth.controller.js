@@ -15,7 +15,7 @@ module.exports.register = async (req, res) => {
     const { emailAddress, password } = req.body;
 
     // Kiểm tra nếu emailAddress đã tồn tại
-    const existingUser = await Account.findOne({ emailAddress: emailAddress });
+    const existingUser = await Account.findOne({ emailAddress });
     if (existingUser) {
       return res.status(400).json({
         code: 400,
@@ -30,7 +30,7 @@ module.exports.register = async (req, res) => {
     const contact = new Contact({});
     const feature = new Feature({});
     const information = new Information({
-      emailAddress: emailAddress, // Đảm bảo emailAddress được lưu
+      emailAddress, // Đảm bảo emailAddress được lưu
     });
     const project = new Project({});
     const resume = new Resume({});
@@ -44,33 +44,41 @@ module.exports.register = async (req, res) => {
 
     // Tạo người dùng mới và gán các ObjectId từ các model liên quan
     const newUser = new Account({
-      emailAddress: emailAddress,
+      emailAddress,
       password: hashedPassword,
-      contact: contact._id, // Gán ObjectId của contact
-      feature: feature._id, // Gán ObjectId của feature
-      information: information._id, // Gán ObjectId của information
-      project: project._id, // Gán ObjectId của project
-      resume: resume._id, // Gán ObjectId của resume
+      contact: contact._id,
+      feature: feature._id,
+      information: information._id,
+      project: project._id,
+      resume: resume._id,
     });
 
     // Lưu người dùng vào cơ sở dữ liệu
     await newUser.save();
 
+    // Cập nhật `slug` từ `newUser` vào tài liệu `Information`
+    await Information.updateOne(
+      { _id: information._id },
+      { slug: newUser.slug }
+    );
+
     // Tạo JWT
     const token = jwt.sign(
       { userId: newUser._id, emailAddress: newUser.emailAddress },
-      String(JWT_SECRET), // Ép kiểu JWT_SECRET thành chuỗi
-      { expiresIn: "24h" } // Token hết hạn sau 1 giờ
+      JWT_SECRET, // Không cần ép kiểu thành chuỗi nếu đã được xác định
+      { expiresIn: "24h" }
     );
 
-    delete newUser.password; // Xóa trường password khỏi đối tượng
+    // Xóa password khỏi đối tượng trước khi trả về
+    const userWithoutPassword = newUser.toObject();
+    delete userWithoutPassword.password;
 
     // Trả về token và thông tin người dùng
     return res.status(201).json({
       code: 200,
       message: "Đăng ký thành công",
       token,
-      user: newUser,
+      user: userWithoutPassword,
     });
   } catch (error) {
     console.log(error);
