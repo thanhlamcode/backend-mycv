@@ -30,12 +30,8 @@ const infoSchema = new mongoose.Schema({
   },
   expertise: String,
   avatar: String,
-  password: {
-    type: String,
-    require: true,
-  },
 });
 
-const Information = mongoose.model("information", infoSchema, "information");
+const Information = mongoose.model("Information", infoSchema, "information");
 
 module.exports = Information;
