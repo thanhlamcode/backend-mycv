@@ -20,6 +20,7 @@ const resumeSchema = new mongoose.Schema({
     {
       certificate: String,
       description: String,
+      link: String,
     },
   ],
 });
