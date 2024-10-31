@@ -64,3 +64,17 @@ module.exports.resume = async (req, res) => {
     return res.json(false);
   }
 };
+
+// [GET] /contact/:slug
+module.exports.contact = async (req, res) => {
+  try {
+    const slug = req.params.slug;
+
+    const account = await Account.findOne({ slug: slug }).select("-password");
+
+    return res.json(account.contact);
+  } catch (error) {
+    console.log(error);
+    return res.json(false);
+  }
+};
