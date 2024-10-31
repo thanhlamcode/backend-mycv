@@ -32,3 +32,35 @@ module.exports.feature = async (req, res) => {
     return res.json(false);
   }
 };
+
+// [GET] /project/:slug
+module.exports.project = async (req, res) => {
+  try {
+    const slug = req.params.slug;
+
+    const account = await Account.findOne({ slug: slug })
+      .select("-password")
+      .populate("project");
+
+    return res.json(account.project);
+  } catch (error) {
+    console.log(error);
+    return res.json(false);
+  }
+};
+
+// [GET] /resume/:slug
+module.exports.resume = async (req, res) => {
+  try {
+    const slug = req.params.slug;
+
+    const account = await Account.findOne({ slug: slug })
+      .select("-password")
+      .populate("resume");
+
+    return res.json(account.resume);
+  } catch (error) {
+    console.log(error);
+    return res.json(false);
+  }
+};

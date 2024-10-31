@@ -4,5 +4,7 @@ const controller = require("../../controller/clients/maincv.controller");
 
 router.get("/information/:slug", controller.info);
 router.get("/feature/:slug", controller.feature);
+router.get("/project/:slug", controller.project);
+router.get("/resume/:slug", controller.resume);
 
 module.exports = router;
